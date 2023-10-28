@@ -1,4 +1,8 @@
 import { useState } from "react";
+import Navbar from "./layout/Navbar";
+import Search from "./components/Search";
+import Logo from "./components/Logo";
+import Results from "./components/Resuts";
 
 const tempMovieData = [
   {
@@ -63,22 +67,11 @@ export default function App() {
 
   return (
     <>
-      <nav className="nav-bar">
-        <div className="logo">
-          <span role="img">🍿</span>
-          <h1>usePopcorn</h1>
-        </div>
-        <input
-          className="search"
-          type="text"
-          placeholder="Search movies..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <p className="num-results">
-          Found <strong>{movies.length}</strong> results
-        </p>
-      </nav>
+      <Navbar>
+        <Logo />
+        <Search query={query} setQuery={setQuery} />
+        <Results movies={movies} />
+      </Navbar>
 
       <main className="main">
         <div className="box">
