@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./layout/Navbar";
 import Search from "./components/Search";
 import Logo from "./components/Logo";
@@ -54,6 +54,8 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+const apiKey = "6283428a";
+
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState(tempMovieData);
@@ -65,6 +67,19 @@ export default function App() {
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
 
+  useEffect(() => {
+    const getMovies = async () => {
+      const res = await fetch(
+        ` http://www.omdbapi.com/?apikey=${apiKey}&s="resident"`
+      );
+      const data = await res.json();
+      console.log(data)
+      setMovies(data.Search);
+    };
+
+    getMovies();
+  }, []);
+  
   return (
     <>
       <Navbar>
