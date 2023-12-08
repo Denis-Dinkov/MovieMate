@@ -9,6 +9,8 @@ import Summary from "./components/Summary";
 import MovieList from "./components/MovieList";
 import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMesage";
+import MovieWatchedList from "./components/MovieWatchedList";
+import MovieDetails from "./components/MovieDetails";
 
 const tempWatchedData = [
   {
@@ -44,6 +46,7 @@ export default function App() {
   const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedMovieId, setSelectedMovieId] = useState("");
 
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
@@ -53,13 +56,13 @@ export default function App() {
     const getMovies = async () => {
       try {
         setIsLoading(true);
-        setError("")
+        setError("");
         const res = await fetch(
           ` http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
         );
         const data = await res.json();
         if (data.Response === "False") {
-          throw new Error("Movie not found")
+          throw new Error("Movie not found");
         }
 
         setMovies(data.Search);
@@ -69,9 +72,9 @@ export default function App() {
         setIsLoading(false);
       }
 
-      if(query.length < 3) {
+      if (query.length < 3) {
         setMovies([]);
-        setError("")
+        setError("");
       }
     };
 
@@ -94,35 +97,20 @@ export default function App() {
         </Box>
 
         <Box>
-          <Summary
-            avgImdbRating={avgImdbRating}
-            avgUserRating={avgUserRating}
-            avgRuntime={avgRuntime}
-            watched={watched}
-          />
+          {selectedMovieId ? (
+            <MovieDetails selectedId={selectedMovieId} />
+          ) : (
+            <>
+              <Summary
+                avgImdbRating={avgImdbRating}
+                avgUserRating={avgUserRating}
+                avgRuntime={avgRuntime}
+                watched={watched}
+              />
 
-          <ul className="list">
-            {watched.map((movie) => (
-              <li key={movie.imdbID}>
-                <img src={movie.Poster} alt={`${movie.Title} poster`} />
-                <h3>{movie.Title}</h3>
-                <div>
-                  <p>
-                    <span>⭐️</span>
-                    <span>{movie.imdbRating}</span>
-                  </p>
-                  <p>
-                    <span>🌟</span>
-                    <span>{movie.userRating}</span>
-                  </p>
-                  <p>
-                    <span>⏳</span>
-                    <span>{movie.runtime} min</span>
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+              <MovieWatchedList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
