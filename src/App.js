@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import Navbar from "./layout/Navbar";
+import Main from "./layout/Main";
 import Search from "./components/Search";
 import Logo from "./components/Logo";
 import Results from "./components/Resuts";
+import Box from "./layout/Box";
+import Summary from "./components/Summary";
+import MovieList from "./components/MovieList";
+import Loader from "./components/Loader";
 
 const tempMovieData = [
   {
@@ -60,8 +65,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
-  const [isOpen1, setIsOpen1] = useState(true);
-  const [isOpen2, setIsOpen2] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
@@ -69,11 +73,13 @@ export default function App() {
 
   useEffect(() => {
     const getMovies = async () => {
+      setIsLoading(true);
       const res = await fetch(
-        ` http://www.omdbapi.com/?apikey=${apiKey}&s="resident"`
+        ` http://www.omdbapi.com/?apikey=${apiKey}&s="fast&furious"`
       );
       const data = await res.json();
       setMovies(data.Search);
+      setIsLoading(false);
     };
 
     getMovies();
@@ -87,89 +93,41 @@ export default function App() {
         <Results movies={movies} />
       </Navbar>
 
-      <main className="main">
-        <div className="box">
-          <button
-            className="btn-toggle"
-            onClick={() => setIsOpen1((open) => !open)}
-          >
-            {isOpen1 ? "–" : "+"}
-          </button>
-          {isOpen1 && (
-            <ul className="list">
-              {movies?.map((movie) => (
-                <li key={movie.imdbID}>
-                  <img src={movie.Poster} alt={`${movie.Title} poster`} />
-                  <h3>{movie.Title}</h3>
-                  <div>
-                    <p>
-                      <span>🗓</span>
-                      <span>{movie.Year}</span>
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+      <Main>
+        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
 
-        <div className="box">
-          <button
-            className="btn-toggle"
-            onClick={() => setIsOpen2((open) => !open)}
-          >
-            {isOpen2 ? "–" : "+"}
-          </button>
-          {isOpen2 && (
-            <>
-              <div className="summary">
-                <h2>Movies you watched</h2>
+        <Box>
+          <Summary
+            avgImdbRating={avgImdbRating}
+            avgUserRating={avgUserRating}
+            avgRuntime={avgRuntime}
+            watched={watched}
+          />
+
+          <ul className="list">
+            {watched.map((movie) => (
+              <li key={movie.imdbID}>
+                <img src={movie.Poster} alt={`${movie.Title} poster`} />
+                <h3>{movie.Title}</h3>
                 <div>
                   <p>
-                    <span>#️⃣</span>
-                    <span>{watched.length} movies</span>
-                  </p>
-                  <p>
                     <span>⭐️</span>
-                    <span>{avgImdbRating}</span>
+                    <span>{movie.imdbRating}</span>
                   </p>
                   <p>
                     <span>🌟</span>
-                    <span>{avgUserRating}</span>
+                    <span>{movie.userRating}</span>
                   </p>
                   <p>
                     <span>⏳</span>
-                    <span>{avgRuntime} min</span>
+                    <span>{movie.runtime} min</span>
                   </p>
                 </div>
-              </div>
-
-              <ul className="list">
-                {watched.map((movie) => (
-                  <li key={movie.imdbID}>
-                    <img src={movie.Poster} alt={`${movie.Title} poster`} />
-                    <h3>{movie.Title}</h3>
-                    <div>
-                      <p>
-                        <span>⭐️</span>
-                        <span>{movie.imdbRating}</span>
-                      </p>
-                      <p>
-                        <span>🌟</span>
-                        <span>{movie.userRating}</span>
-                      </p>
-                      <p>
-                        <span>⏳</span>
-                        <span>{movie.runtime} min</span>
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-      </main>
+              </li>
+            ))}
+          </ul>
+        </Box>
+      </Main>
     </>
   );
 }
