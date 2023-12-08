@@ -1,7 +1,21 @@
 import { useEffect, useState } from "react";
 
 const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
-  const [movieData, setMovieData] = useState("");
+  const [movieData, setMovieData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+  } = movieData;
 
   useEffect(() => {
     const getMovieData = async () => {
@@ -10,20 +24,36 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
           `http://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`
         );
         const data = await res.json();
-        console.log(data);
+        setMovieData(data);
       } catch (error) {
         console.error(error.message);
       }
     };
 
     getMovieData();
-  });
+  }, []);
   return (
-    <div className="detail">
-      <button className="btn-back" onClick={onCloseMovie}>
-        &larr;
-      </button>
-      {selectedId}
+    <div className="details">
+      <header>
+        <button className="btn-back" onClick={onCloseMovie}>
+          &larr;
+        </button>
+        <img src={poster} alt={`Poster of ${title}`} />
+        <div className="details-overview">
+          <h2>{title}</h2>
+          <p>${released} &bull; ${runtime}</p>
+          <p>{genre}</p>
+          <p>
+            <span>⭐</span>{imdbRating} IMDb rating
+          </p>
+        </div>
+      </header>
+
+      <section>
+        <p><em>{plot}</em></p>
+        <p>Starring {actors}</p>
+        <p>Directed by {director}</p>
+      </section>
     </div>
   );
 };
