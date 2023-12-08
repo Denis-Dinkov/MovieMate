@@ -83,7 +83,6 @@ export default function App() {
         );
         const data = await res.json();
         if (data.Response === "False") {
-          setMovies([])
           throw new Error("Movie not found")
         }
 
@@ -92,6 +91,11 @@ export default function App() {
         setError(err.message);
       } finally {
         setIsLoading(false);
+      }
+
+      if(query.length < 3) {
+        setMovies([]);
+        setError("")
       }
     };
 
