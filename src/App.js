@@ -8,6 +8,7 @@ import Box from "./layout/Box";
 import Summary from "./components/Summary";
 import MovieList from "./components/MovieList";
 import Loader from "./components/Loader";
+import ErrorMessage from "./components/ErrorMesage";
 
 const tempMovieData = [
   {
@@ -66,6 +67,7 @@ export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
@@ -73,13 +75,21 @@ export default function App() {
 
   useEffect(() => {
     const getMovies = async () => {
-      setIsLoading(true);
-      const res = await fetch(
-        ` http://www.omdbapi.com/?apikey=${apiKey}&s="fast&furious"`
-      );
-      const data = await res.json();
-      setMovies(data.Search);
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          ` http://www.omdbapi.com/?apikey=${apiKey}&s="fast"`
+        );
+        const data = await res.json();
+        if (data.Response === "False") throw new Error("Movie not found")
+
+        setMovies(data.Search);
+      } catch (err) {
+        console.error(err.message);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     getMovies();
@@ -94,7 +104,11 @@ export default function App() {
       </Navbar>
 
       <Main>
-        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
+        <Box>
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage msg={error} />}
+        </Box>
 
         <Box>
           <Summary
