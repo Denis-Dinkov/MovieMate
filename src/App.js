@@ -73,13 +73,12 @@ export default function App() {
         ` http://www.omdbapi.com/?apikey=${apiKey}&s="resident"`
       );
       const data = await res.json();
-      console.log(data)
       setMovies(data.Search);
     };
 
     getMovies();
   }, []);
-  
+
   return (
     <>
       <Navbar>
