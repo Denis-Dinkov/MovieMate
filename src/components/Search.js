@@ -1,4 +1,4 @@
-const Search = ({ query, setQuery, movies }) => {
+const Search = ({ query, setQuery }) => {
   return (
     <input
       className="search"
