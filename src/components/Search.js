@@ -5,6 +5,7 @@ const Search = ({ query, setQuery }) => {
       type="text"
       placeholder="Search movies..."
       value={query}
+      id="movieSearch"
       onChange={(e) => setQuery(e.target.value)}
     />
   )

@@ -52,6 +52,14 @@ export default function App() {
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
 
+  const handleSelectMovie = (id) => {
+    setSelectedMovieId((selectedId) => (id === selectedId ? null : id));
+  };
+
+  const handleCloseMovie = () => {
+    setSelectedMovieId("");
+  };
+
   useEffect(() => {
     const getMovies = async () => {
       try {
@@ -92,13 +100,18 @@ export default function App() {
       <Main>
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && <MovieList movies={movies} />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
+          )}
           {error && <ErrorMessage msg={error} />}
         </Box>
 
         <Box>
           {selectedMovieId ? (
-            <MovieDetails selectedId={selectedMovieId} />
+            <MovieDetails
+              selectedId={selectedMovieId}
+              onCloseMovie={handleCloseMovie}
+            />
           ) : (
             <>
               <Summary
