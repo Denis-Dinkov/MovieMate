@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import StarRating from "./StarRating";
 
 const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
   const [movieData, setMovieData] = useState({});
@@ -31,7 +32,7 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
     };
 
     getMovieData();
-  }, []);
+  }, [selectedId]);
   return (
     <div className="details">
       <header>
@@ -50,6 +51,9 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
       </header>
 
       <section>
+        <div className="rating">
+          <StarRating maxRating={10} size={24}/>
+        </div>
         <p><em>{plot}</em></p>
         <p>Starring {actors}</p>
         <p>Directed by {director}</p>
