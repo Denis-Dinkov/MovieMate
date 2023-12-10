@@ -60,6 +60,10 @@ export default function App() {
     setSelectedMovieId("");
   };
 
+  const handleAddWatchedMovie = (movie) => {
+    setWatched(watched => [...watched, movie])
+  }
+
   useEffect(() => {
     const getMovies = async () => {
       try {
@@ -111,6 +115,7 @@ export default function App() {
             <MovieDetails
               selectedId={selectedMovieId}
               onCloseMovie={handleCloseMovie}
+              onAddWatched={handleAddWatchedMovie}
               apiKey={apiKey}
             />
           ) : (

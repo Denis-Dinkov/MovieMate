@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
 
-const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
+const MovieDetails = ({ selectedId, onCloseMovie, apiKey, onAddWatched }) => {
   const [movieData, setMovieData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState('')
 
   const {
     Title: title,
@@ -18,6 +19,20 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
     Director: director,
     Genre: genre,
   } = movieData;
+
+  const handleAddMovie = () => {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(' ').at(0))
+    }
+
+    onAddWatched(newWatchedMovie)
+    onCloseMovie()
+  }
 
   useEffect(() => {
     const getMovieData = async () => {
@@ -36,6 +51,7 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
 
     getMovieData();
   }, [selectedId]);
+
   return (
     <div className="details">
       {isLoading ? (
@@ -63,6 +79,7 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey }) => {
           <section>
             <div className="rating">
               <StarRating maxRating={10} size={24} />
+              <button className="btn-add" onClick={handleAddMovie}>+ Add to list</button>
             </div>
             <p>
               <em>{plot}</em>
