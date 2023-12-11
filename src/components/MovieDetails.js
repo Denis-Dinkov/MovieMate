@@ -14,6 +14,7 @@ const MovieDetails = ({
   const [userRating, setUserRating] = useState("");
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+  const watchedUserRating = watched.find(movie => movie.imdbID === selectedId)?.userRating
 
   const {
     Title: title,
@@ -102,7 +103,7 @@ const MovieDetails = ({
                   )}
                 </>
               ) : (
-                <p>You rated with movie</p>
+                <p>You rated with movie {watchedUserRating} ⭐</p>
               )}
             </div>
             <p>
