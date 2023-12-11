@@ -64,8 +64,9 @@ const MovieDetails = ({
   }, [selectedId]);
 
   useEffect(() => {
+    if(!title) return
     document.title = `Movie | ${title}`
-  },[selectedId])
+  },[selectedId, title])
 
   return (
     <div className="details">
