@@ -103,7 +103,7 @@ const MovieDetails = ({
                   )}
                 </>
               ) : (
-                <p>You rated with movie {watchedUserRating} ⭐</p>
+                <p>You rated with movie {watchedUserRating} <span>⭐</span></p>
               )}
             </div>
             <p>
