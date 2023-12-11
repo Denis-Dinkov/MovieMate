@@ -6,11 +6,11 @@ const WatchedMovie = ({ movie, onDeleteWatched }) => {
       <div>
         <p>
           <span>⭐️</span>
-          <span>{movie.imdbRating.toFixed(2)}</span>
+          <span>{movie.imdbRating.toFixed(1)}</span>
         </p>
         <p>
           <span>🌟</span>
-          <span>{movie.userRating.toFixed(2)}</span>
+          <span>{movie.userRating.toFixed(1)}</span>
         </p>
         <p>
           <span>⏳</span>
