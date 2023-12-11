@@ -10,4 +10,4 @@ const MovieWatchedList = ({ watched }) => {
   );
 };
 
-export default MovieWatchedList
+export default MovieWatchedList;
