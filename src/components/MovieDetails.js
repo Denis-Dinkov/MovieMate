@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
 
-const MovieDetails = ({ selectedId, onCloseMovie, apiKey, onAddWatched, watched }) => {
+const MovieDetails = ({
+  selectedId,
+  onCloseMovie,
+  apiKey,
+  onAddWatched,
+  watched,
+}) => {
   const [movieData, setMovieData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
 
-  const isWatched = watched.map(movie => movie.imdbID)
-  console.log(isWatched)
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
 
   const {
     Title: title,
@@ -53,7 +58,7 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey, onAddWatched, watched 
       }
     };
 
-    setUserRating()
+    setUserRating();
     getMovieData();
   }, [selectedId]);
 
@@ -83,15 +88,21 @@ const MovieDetails = ({ selectedId, onCloseMovie, apiKey, onAddWatched, watched 
 
           <section>
             <div className="rating">
-              <StarRating
-                maxRating={10}
-                size={24}
-                onSetRating={setUserRating}
-              />
-              {userRating > 0 && (
-                <button className="btn-add" onClick={handleAddMovie}>
-                  + Add to list
-                </button>
+              {!isWatched ? (
+                <>
+                  <StarRating
+                    maxRating={10}
+                    size={24}
+                    onSetRating={setUserRating}
+                  />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAddMovie}>
+                      + Add to list
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>You rated with movie</p>
               )}
             </div>
             <p>
