@@ -14,7 +14,9 @@ const MovieDetails = ({
   const [userRating, setUserRating] = useState("");
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
-  const watchedUserRating = watched.find(movie => movie.imdbID === selectedId)?.userRating
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   const {
     Title: title,
@@ -64,9 +66,13 @@ const MovieDetails = ({
   }, [selectedId]);
 
   useEffect(() => {
-    if(!title) return
-    document.title = `Movie | ${title}`
-  },[selectedId, title])
+    if (!title) return;
+    document.title = `Movie | ${title}`;
+
+    return () => {
+      document.title = "MovieMate";
+    };
+  }, [selectedId, title]);
 
   return (
     <div className="details">
@@ -108,7 +114,9 @@ const MovieDetails = ({
                   )}
                 </>
               ) : (
-                <p>You rated with movie {watchedUserRating} <span>⭐</span></p>
+                <p>
+                  You rated with movie {watchedUserRating} <span>⭐</span>
+                </p>
               )}
             </div>
             <p>
