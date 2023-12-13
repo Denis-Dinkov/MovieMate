@@ -74,6 +74,18 @@ const MovieDetails = ({
     };
   }, [selectedId, title]);
 
+  useEffect(() => {
+    const callback = (e) => {
+      if (e.code === `Escape`) onCloseMovie();
+    };
+
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener('keydown', callback)
+    }
+  }, []);
+
   return (
     <div className="details">
       {isLoading ? (
