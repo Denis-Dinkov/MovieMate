@@ -1,9 +1,3 @@
-# Live Demo - https://travelo-parallax.vercel.app/
-
-# Zhangjiajie Parallax
-
-![Example Image](/img/mockup.webp)
-
 ## Description
 
 I worked on the MovieMate project to practice my React skills. It's about selecting your favorite movies and adding them to a watchlist using an API.
